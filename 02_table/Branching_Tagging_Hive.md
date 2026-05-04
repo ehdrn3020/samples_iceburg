@@ -20,6 +20,20 @@ INSERT INTO nyc.taxis VALUES (...);
 ```
 
 ### Branch
+- 움직이는 포인터
+- 운영 테이블을 복사하지 않고도 테스트 가능
+  - 데이터는 그대로, metadata pointer만 분기 
+```aiignore
+테스트용 브랜치를 만들면
+
+main branch
+snapshot 100 → snapshot 101 → snapshot 102
+                          \
+                           test branch → snapshot 103 → snapshot 104
+
+test 브랜치에서 데이터를 변경하면 main에는 영향을 주지 않고 test 쪽에만 새 snapshot이 생성
+```
+- 예제
 ```declarative
 // 생성
 ALTER TABLE nyc.taxis CREATE BRANCH test_branch;
@@ -40,6 +54,8 @@ SELECT * FROM nyc.taxis.test_branch;
 ```
 
 ### Tag
+- 고정된 포인터
+- 용도 : 월마감 데이터 / 리포트 확정 버전 / 배포 전 검증 기준점 
 ```declarative
 // 현재 snapshot을 v1으로 고정
 ALTER TABLE nyc.taxis CREATE TAG v1;
